@@ -17,8 +17,8 @@ class TestScavioWebSearch:
     @pytest.fixture
     def search_response(self):
         return {
-            "results": [
-                {"title": "Example Title", "url": "https://example.com", "content": "Example content", "position": 1}
+            "organic_results": [
+                {"title": "Example Title", "link": "https://example.com", "snippet": "Example content", "position": 1}
             ]
         }
 
@@ -96,11 +96,38 @@ class TestScavioWebSearch:
 
         ws.run(query="test", search_params={"country_code": "us"})
 
-        mock_client.google.search.assert_called_once_with("test", country_code="us")
+        mock_client.google.search.assert_called_once_with("test", gl="us")
+
+    def test_run_maps_params_to_v2(self, mock_client):
+        ws = ScavioWebSearch(api_key=Secret.from_token("test-key"), top_k=10)
+        ws._scavio_client = mock_client
+
+        ws.run(
+            query="test",
+            search_params={
+                "country_code": "gb",
+                "language": "en",
+                "page": 3,
+                "device": "mobile",
+                "nfpr": True,
+                "search_type": "news",
+                "light_request": False,
+            },
+        )
+
+        mock_client.google.search.assert_called_once_with(
+            "test", gl="gb", hl="en", start=20, device="mobile", nfpr=True
+        )
+
+    def test_run_page_one_omits_start(self, mock_client):
+        ws = ScavioWebSearch(api_key=Secret.from_token("test-key"))
+        ws._scavio_client = mock_client
+        ws.run(query="test", search_params={"page": 1})
+        mock_client.google.search.assert_called_once_with("test")
 
     def test_run_respects_top_k(self, mock_client):
         mock_client.google.search.return_value = {
-            "results": [{"title": f"r{i}", "url": f"https://x/{i}", "content": "c"} for i in range(20)]
+            "organic_results": [{"title": f"r{i}", "link": f"https://x/{i}", "snippet": "c"} for i in range(20)]
         }
         ws = ScavioWebSearch(api_key=Secret.from_token("test-key"), top_k=3)
         ws._scavio_client = mock_client
@@ -166,7 +193,7 @@ class TestScavioWebSearch:
             mock_cls.assert_called_once_with(api_key="test-key")
 
     def test_run_empty_results(self, mock_client):
-        mock_client.google.search.return_value = {"results": []}
+        mock_client.google.search.return_value = {"organic_results": []}
         ws = ScavioWebSearch(api_key=Secret.from_token("test-key"))
         ws._scavio_client = mock_client
         result = ws.run(query="obscure query")

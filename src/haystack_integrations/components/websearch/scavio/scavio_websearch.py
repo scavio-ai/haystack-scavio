@@ -53,9 +53,10 @@ class ScavioWebSearch:
         :param top_k:
             Maximum number of results to return.
         :param search_params:
-            Additional parameters passed to the Scavio Google search endpoint. Supported keys
-            include: `country_code`, `language`, `page`, `search_type`, `device`, `nfpr`,
-            `light_request`.
+            Additional parameters for the Scavio Google (v2) search endpoint. Supported keys:
+            `country_code` (mapped to `gl`), `language` (mapped to `hl`), `page`
+            (mapped to `start=(page-1)*10`), `device`, and `nfpr`. Any other key is passed
+            through verbatim to the SDK (e.g. `google_domain`, `location`, `safe`).
         """
         self.api_key = api_key
         self.top_k = top_k
@@ -97,8 +98,8 @@ class ScavioWebSearch:
             msg = "ScavioWebSearch client failed to initialize."
             raise RuntimeError(msg)
 
-        params = (search_params if search_params is not None else self.search_params or {}).copy()
-        response = self._scavio_client.google.search(query, **params)
+        params = search_params if search_params is not None else self.search_params or {}
+        response = self._scavio_client.google.search(query, **self._map_params(params))
         return self._parse_response(response, self.top_k)
 
     @component.output_types(documents=list[Document], links=list[str])
@@ -124,14 +125,44 @@ class ScavioWebSearch:
             msg = "ScavioWebSearch async client failed to initialize."
             raise RuntimeError(msg)
 
-        params = (search_params if search_params is not None else self.search_params or {}).copy()
-        response = await self._async_scavio_client.google.search(query, **params)
+        params = search_params if search_params is not None else self.search_params or {}
+        response = await self._async_scavio_client.google.search(query, **self._map_params(params))
         return self._parse_response(response, self.top_k)
+
+    @staticmethod
+    def _map_params(params: dict[str, Any]) -> dict[str, Any]:
+        """
+        Map the component's public search params to the Scavio Google (v2) API.
+
+        `country_code` -> `gl`, `language` -> `hl`, `page` -> `start=(page-1)*10`.
+        The v1-only keys `search_type` and `light_request` are dropped. Any other key
+        is passed through verbatim.
+
+        :param params: Public search parameters.
+        :returns: Keyword arguments for `client.google.search`.
+        """
+        mapped: dict[str, Any] = {}
+        for key, value in params.items():
+            if value is None or key in ("search_type", "light_request"):
+                continue
+            if key == "country_code":
+                mapped["gl"] = value
+            elif key == "language":
+                mapped["hl"] = value
+            elif key == "page":
+                if value > 1:
+                    mapped["start"] = (value - 1) * 10
+            else:
+                mapped[key] = value
+        return mapped
 
     @staticmethod
     def _parse_response(response: dict[str, Any], top_k: int | None) -> dict[str, Any]:
         """
-        Convert a Scavio search response to Haystack Documents and links.
+        Convert a Scavio Google (v2) search response to Haystack Documents and links.
+
+        Reads `organic_results`, mapping each item's `link` to the Document URL and
+        `snippet` to the Document content.
 
         :param response: Scavio search response dictionary.
         :param top_k: Maximum number of results to keep.
@@ -140,14 +171,14 @@ class ScavioWebSearch:
         documents: list[Document] = []
         links: list[str] = []
 
-        results = response.get("results", [])
+        results = response.get("organic_results", [])
         if top_k is not None:
             results = results[:top_k]
 
         for result in results:
-            url = result.get("url", "")
+            url = result.get("link", "")
             title = result.get("title", "")
-            content = result.get("content", "")
+            content = result.get("snippet", "")
 
             documents.append(Document(content=content, meta={"title": title, "url": url}))
             if url:
