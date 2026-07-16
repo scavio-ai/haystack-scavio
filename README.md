@@ -83,9 +83,11 @@ asyncio.run(main())
 
 - **`api_key`**: API key for Scavio. Defaults to the `SCAVIO_API_KEY` environment variable.
 - **`top_k`**: Maximum number of results to return. Defaults to 10.
-- **`search_params`**: Additional parameters passed to the Scavio Google search endpoint.
-  Supported keys include `country_code`, `language`, `page`, `search_type`, `device`, `nfpr`,
-  `light_request`. Can be set at init time or overridden per `run`.
+- **`search_params`**: Additional parameters for the Scavio Google (v2) search endpoint.
+  Supported keys: `country_code` (mapped to `gl`), `language` (mapped to `hl`), `page`
+  (mapped to `start=(page-1)*10`), `device`, and `nfpr`. Any other key is passed through
+  verbatim (e.g. `google_domain`, `location`, `safe`). Can be set at init time or overridden
+  per `run`.
 
 ## Development
 
