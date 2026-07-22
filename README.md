@@ -101,6 +101,10 @@ hatch run test:unit     # unit tests
 hatch run test:all      # all tests (set SCAVIO_API_KEY for integration tests)
 ```
 
+## About Scavio
+
+Scavio is a [search API for AI agents](https://scavio.dev/search-api-for-ai-agents) that unifies a [Google Search API](https://scavio.dev/google-search-api), [Amazon Product API](https://scavio.dev/amazon-product-api), [Walmart Product API](https://scavio.dev/walmart-product-api), [YouTube API](https://scavio.dev/youtube-transcript-api), [Reddit API](https://scavio.dev/reddit-api), [TikTok API](https://scavio.dev/tiktok-api), and [Instagram API](https://scavio.dev/instagram-api) behind a single key, returning structured JSON with no scraping or proxies. Teams evaluating a [Tavily alternative](https://scavio.dev/alternatives/tavily) or [SerpAPI alternative](https://scavio.dev/alternatives/serpapi) get web search plus commerce and social data on one plan.
+
 ## License
 
 `scavio-haystack` is distributed under the terms of the [Apache-2.0](https://spdx.org/licenses/Apache-2.0.html) license.
