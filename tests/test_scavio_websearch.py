@@ -213,6 +213,43 @@ class TestScavioWebSearch:
         with pytest.raises(RuntimeError, match="ScavioWebSearch async client failed to initialize"):
             await ws.run_async(query="test")
 
+    def test_surface_is_exactly_one_endpoint(self, search_response):
+        """This package is curated: one component, one endpoint (POST /api/v2/google).
+
+        A client that raises on every namespace except `google` proves nothing else is
+        reachable, so the credit note in the README ("flat 1 credit") stays true.
+        """
+
+        class _StrictClient:
+            def __init__(self, response):
+                self.google = MagicMock()
+                self.google.search.return_value = response
+
+            def __getattr__(self, name):
+                msg = f"curated surface: {name} is not exposed by scavio-haystack"
+                raise AssertionError(msg)
+
+        ws = ScavioWebSearch(api_key=Secret.from_token("test-key"))
+        ws._scavio_client = _StrictClient(search_response)
+        assert ws.run(query="test")["links"] == ["https://example.com"]
+
+    def test_module_exports_only_the_websearch_component(self):
+        """No second tool has crept into the public module."""
+        import haystack_integrations.components.websearch.scavio as pkg
+
+        exported = {n for n in dir(pkg) if not n.startswith("_")}
+        assert exported == {"ScavioWebSearch", "scavio_websearch"}
+
+    def test_v1_google_vocabulary_never_reaches_the_sdk(self, mock_client):
+        """/api/v1/google is retired (410). v1-only keys must be dropped, not forwarded."""
+        ws = ScavioWebSearch(api_key=Secret.from_token("test-key"))
+        ws._scavio_client = mock_client
+        ws.run(query="test", search_params={"light_request": True, "search_type": "news", "country_code": "us"})
+        _, kwargs = mock_client.google.search.call_args
+        assert "light_request" not in kwargs
+        assert "search_type" not in kwargs
+        assert kwargs == {"gl": "us"}
+
     @pytest.mark.skipif(
         not os.environ.get("SCAVIO_API_KEY"),
         reason="Export SCAVIO_API_KEY to run integration tests.",

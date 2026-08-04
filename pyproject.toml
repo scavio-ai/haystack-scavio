@@ -28,7 +28,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["haystack-ai>=2.24.1", "scavio>=0.13.0"]
+dependencies = ["haystack-ai>=2.24.1", "scavio>=0.14.0"]
 
 [project.urls]
 Documentation = "https://github.com/scavio-ai/haystack-scavio#readme"

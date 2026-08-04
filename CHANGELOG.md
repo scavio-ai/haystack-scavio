@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.1.3]
+
+### Changed
+
+- Raise the `scavio` floor to `>=0.14.0`, the release that carries the full
+  namespace set (X, LinkedIn, TikTok Shop and the 14 Google v2 verticals).
+  Nothing in `ScavioWebSearch` needs them, but the floor keeps the installed
+  SDK in step with the rest of the Scavio ecosystem.
+- README: state the scope explicitly. This package exposes exactly **1** of
+  Scavio's 98 endpoints (`POST /api/v2/google`, 1 credit) and stays that way
+  by design; the hosted MCP server is the route to the rest of the API.
+
 ## [v0.1.2]
 
 ### Changed
