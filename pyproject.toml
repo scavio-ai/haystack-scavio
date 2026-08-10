@@ -28,7 +28,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["haystack-ai>=2.24.1", "scavio>=0.14.0"]
+dependencies = ["haystack-ai>=2.24.1", "scavio>=0.15.0"]
 
 [project.urls]
 Documentation = "https://github.com/scavio-ai/haystack-scavio#readme"
@@ -139,7 +139,7 @@ known-first-party = ["haystack_integrations"]
 ban-relative-imports = "parents"
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*" = ["PLR2004", "S101", "TID252", "D", "ANN"]
+"tests/**/*" = ["PLR2004", "S101", "TID252", "D", "ANN", "PLC0415"]
 "examples/**/*" = ["D", "T201", "ANN"]
 
 [tool.coverage.run]

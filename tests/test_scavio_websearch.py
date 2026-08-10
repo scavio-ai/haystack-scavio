@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import os
+import re
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -11,6 +13,21 @@ from haystack.core.serialization import component_from_dict, component_to_dict
 from haystack.utils import Secret
 
 from haystack_integrations.components.websearch.scavio import ScavioWebSearch
+
+PYPROJECT = Path(__file__).resolve().parents[1] / "pyproject.toml"
+MINIMUM_SCAVIO = (0, 15, 0)
+
+
+@pytest.mark.skipif(not PYPROJECT.is_file(), reason="pyproject.toml is only present in a source checkout.")
+def test_scavio_floor_is_current():
+    """The declared `scavio` floor must not fall behind the SDK the ecosystem assumes.
+
+    A stale floor lets a resolver install an SDK without the current namespaces, so the
+    package installs cleanly and then fails at import time in someone else's pipeline.
+    """
+    match = re.search(r'"scavio>=(\d+)\.(\d+)\.(\d+)"', PYPROJECT.read_text(encoding="utf-8"))
+    assert match is not None, "pyproject.toml must pin a `scavio>=X.Y.Z` floor."
+    assert tuple(int(part) for part in match.groups()) >= MINIMUM_SCAVIO
 
 
 class TestScavioWebSearch:
