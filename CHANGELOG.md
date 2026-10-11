@@ -4,14 +4,20 @@ The version is derived from the git tag by `hatch-vcs`, and PyPI is published by
 the tag push. A heading here is therefore only real if a matching `vX.Y.Z` tag
 exists.
 
-## [Unreleased] — ships as v0.1.2
+## [v0.1.3]
+
+### Changed
+
+- README: YouTube transcripts cost 5 credits (was 8).
+
+## [v0.1.2]
 
 > **Ledger correction.** Earlier revisions of this file carried `[v0.1.2]` and
 > `[v0.1.3]` headings. Neither version was ever tagged and neither reached PyPI,
 > which is still on `0.1.1` — the code they described has sat on `main`,
 > unreleased, since it was written. The two headings are collapsed into this one
 > entry, which ships as `v0.1.2` when the tag is cut. Nothing was published under
-> `0.1.3`; that version number does not exist and is not reserved.
+> `0.1.3` at the time; the later v0.1.3 above is an unrelated README release.
 
 ### Changed
 
