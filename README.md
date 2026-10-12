@@ -26,7 +26,7 @@ That is the whole surface. A Haystack web search component has one job — turn 
 endpoint on purpose rather than growing into a general-purpose API client.
 
 **Credits:** 1 credit per `run` / `run_async` call. Nothing here touches the endpoints that
-cost more (YouTube transcripts are 5, Instagram is 2-10, a LinkedIn job is 30) or the
+cost more (YouTube transcripts are 5, most Instagram calls are 2, a LinkedIn job is 30) or the
 body-priced ones, whose cost is a function of the request rather than a flat number
 (Walmart, Threads, Kuaishou and `extract`). A `ScavioWebSearch` pipeline is flat 1 credit
 per search.

@@ -4,6 +4,12 @@ The version is derived from the git tag by `hatch-vcs`, and PyPI is published by
 the tag push. A heading here is therefore only real if a matching `vX.Y.Z` tag
 exists.
 
+## [v0.1.4]
+
+### Changed
+
+- README: most Instagram calls cost 2 credits (was 2-10).
+
 ## [v0.1.3]
 
 ### Changed
