@@ -15,7 +15,7 @@ Scavio is a unified search API for AI agents. Get an API key at
 ## Scope: 1 endpoint, by design
 
 This package is a **curated subset** of the Scavio API, not a wrapper around all of it.
-It exposes exactly **1** of Scavio's 195 endpoints:
+It exposes exactly **1** of Scavio's 200 endpoints:
 
 | Component | Endpoint | Platform | Credits |
 |---|---|---|---|
@@ -33,11 +33,12 @@ per search.
 
 ### Reaching the rest of the API
 
-Scavio covers **195 live endpoints**: 194 across 31 platforms, plus `extract`, which reads
-any URL. The platforms are **Google, YouTube, Amazon, Walmart, eBay, Target, Home Depot,
-Reddit, X, TikTok, TikTok Shop, Instagram, LinkedIn, Threads, Kuaishou, Zillow, Redfin,
-Booking.com, Tripadvisor, Airbnb, Yelp, Indeed, Glassdoor, the Apple App Store, Google Play,
-SEC EDGAR, Companies House, G2, Capterra, Google Ads Transparency and the Meta Ad Library.**
+Scavio covers **200 live endpoints**: 199 across 33 platforms, plus `extract`, which reads
+any URL. The platforms are **Google, YouTube, Amazon, Walmart, HEB, Kroger, eBay, Target,
+Home Depot, Reddit, X, TikTok, TikTok Shop, Instagram, LinkedIn, Threads, Kuaishou, Zillow,
+Redfin, Booking.com, Tripadvisor, Airbnb, Yelp, Indeed, Glassdoor, the Apple App Store,
+Google Play, SEC EDGAR, Companies House, G2, Capterra, Google Ads Transparency and the
+Meta Ad Library.**
 The most recent batch added **93 endpoints across 22 platforms plus `extract`** — 21 of those
 platforms are new to Scavio and Walmart was rebuilt. **None of them are reachable through this
 package**, which stays at Google web search. Two ways to use them from Haystack:
