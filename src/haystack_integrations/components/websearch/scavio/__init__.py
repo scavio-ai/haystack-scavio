@@ -12,6 +12,10 @@ from haystack_integrations.components.websearch.scavio.scavio_kroger import (
     ScavioKrogerProduct,
     ScavioKrogerSearch,
 )
+from haystack_integrations.components.websearch.scavio.scavio_decathlon import (
+    ScavioDecathlonProduct,
+    ScavioDecathlonSearch,
+)
 
 __all__ = [
     "ScavioWebSearch",
@@ -20,4 +24,6 @@ __all__ = [
     "ScavioHebStores",
     "ScavioKrogerSearch",
     "ScavioKrogerProduct",
+    "ScavioDecathlonSearch",
+    "ScavioDecathlonProduct",
 ]
