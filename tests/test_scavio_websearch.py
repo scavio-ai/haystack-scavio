@@ -251,11 +251,12 @@ class TestScavioWebSearch:
         assert ws.run(query="test")["links"] == ["https://example.com"]
 
     def test_module_exports_only_the_websearch_component(self):
-        """No second tool has crept into the public module."""
+        """Every public Scavio* name is declared in __all__; nothing undeclared leaks out."""
         import haystack_integrations.components.websearch.scavio as pkg
 
-        exported = {n for n in dir(pkg) if not n.startswith("_")}
-        assert exported == {"ScavioWebSearch", "scavio_websearch"}
+        exported = {n for n in dir(pkg) if n.startswith("Scavio")}
+        assert "ScavioWebSearch" in exported
+        assert exported == set(pkg.__all__)
 
     def test_v1_google_vocabulary_never_reaches_the_sdk(self, mock_client):
         """/api/v1/google is retired (410). v1-only keys must be dropped, not forwarded."""

@@ -48,13 +48,17 @@ class ScavioHebSearch:
         query: str,
         page: int | None = None,
         page_size: int | None = None,
+        store_id: str | None = None,
     ) -> dict[str, Any]:
         """
         Search HEB for grocery products.
 
         :param query: Product search query.
         :param page: Results page, 1-based.
-        :param page_size: Results per page (1-60, default 30).
+        :param page_size: Results per page, 1-60. Defaults to 60.
+        :param store_id: HEB store number from ScavioHebStores (store_number), e.g. "441".
+            Prices, stock, aisle location and assortment come from that store; the store
+            used is echoed in data.store {store_id, name}. US only. Omit for HEB's default store.
         :returns: Dictionary with raw API response under 'results'.
         """
         if self._client is None:
@@ -65,6 +69,8 @@ class ScavioHebSearch:
             params["page"] = page
         if page_size is not None:
             params["page_size"] = page_size
+        if store_id is not None:
+            params["store_id"] = store_id
         response = self._client.heb.search(query, **params)
         return {"results": response}
 
@@ -74,6 +80,7 @@ class ScavioHebSearch:
         query: str,
         page: int | None = None,
         page_size: int | None = None,
+        store_id: str | None = None,
     ) -> dict[str, Any]:
         if self._async_client is None:
             self.warm_up()
@@ -83,6 +90,8 @@ class ScavioHebSearch:
             params["page"] = page
         if page_size is not None:
             params["page_size"] = page_size
+        if store_id is not None:
+            params["store_id"] = store_id
         response = await self._async_client.heb.search(query, **params)
         return {"results": response}
 
@@ -123,13 +132,18 @@ class ScavioHebProduct:
         product_url: str | None = None,
         product_id: str | None = None,
         slug: str | None = None,
+        store_id: str | None = None,
     ) -> dict[str, Any]:
         """
         Get full details for an HEB product.
 
         :param product_url: Full HEB product page URL (preferred).
-        :param product_id: HEB product id (requires slug).
-        :param slug: Product URL slug, required with product_id.
+        :param product_id: HEB product id. Needs slug, unless store_id is set (then
+            product_id alone works).
+        :param slug: Product URL slug, required with product_id unless store_id is set.
+        :param store_id: HEB store number from ScavioHebStores (store_number), e.g. "441".
+            Price, stock and aisle location come from that store; the store used is echoed
+            in data.store {store_id, name}. US only. Omit for HEB's default store.
         :returns: Dictionary with raw API response under 'results'.
         """
         if self._client is None:
@@ -142,6 +156,8 @@ class ScavioHebProduct:
             params["product_id"] = product_id
         if slug is not None:
             params["slug"] = slug
+        if store_id is not None:
+            params["store_id"] = store_id
         response = self._client.heb.product(**params)
         return {"results": response}
 
@@ -151,6 +167,7 @@ class ScavioHebProduct:
         product_url: str | None = None,
         product_id: str | None = None,
         slug: str | None = None,
+        store_id: str | None = None,
     ) -> dict[str, Any]:
         if self._async_client is None:
             self.warm_up()
@@ -162,6 +179,8 @@ class ScavioHebProduct:
             params["product_id"] = product_id
         if slug is not None:
             params["slug"] = slug
+        if store_id is not None:
+            params["store_id"] = store_id
         response = await self._async_client.heb.product(**params)
         return {"results": response}
 

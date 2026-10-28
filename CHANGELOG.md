@@ -4,6 +4,20 @@ The version is derived from the git tag by `hatch-vcs`, and PyPI is published by
 the tag push. A heading here is therefore only real if a matching `vX.Y.Z` tag
 exists.
 
+## [v0.1.5]
+
+### Added
+
+- `ScavioHebSearch` and `ScavioHebProduct` take `store_id` (an HEB store number from
+  `ScavioHebStores`): prices, stock, aisle location and search assortment for that
+  store, echoed in `data.store`. With `store_id`, `ScavioHebProduct` accepts
+  `product_id` without `slug`.
+- First release carrying the HEB, Kroger and Decathlon components.
+
+### Changed
+
+- `ScavioHebSearch` `page_size` default is 60.
+
 ## [v0.1.4]
 
 ### Changed
